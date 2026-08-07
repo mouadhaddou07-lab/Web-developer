@@ -1,0 +1,2569 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Web Dev - Custom Web Development Partner</title>
+  <style>
+    /* -------------------------------------------------------------
+       CSS VARIABLES & THEME SETUP
+       ------------------------------------------------------------- */
+    :root {
+      --bg-primary: #09090b;
+      --bg-secondary: #18181b;
+      --bg-tertiary: #27272a;
+      --text-primary: #f4f4f5;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-light: rgba(99, 102, 241, 0.12);
+      --border-color: #27272a;
+      --card-bg: #18181b;
+      --card-hover: #212124;
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+      --success: #10b981;
+      --success-light: rgba(16, 185, 129, 0.1);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --transition-speed: 0.3s;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #f1f5f9;
+      --bg-tertiary: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent: #4f46e5;
+      --accent-hover: #3730a3;
+      --accent-light: rgba(79, 70, 229, 0.08);
+      --border-color: #e2e8f0;
+      --card-bg: #ffffff;
+      --card-hover: #f1f5f9;
+      --shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.1);
+      --success: #059669;
+      --success-light: rgba(5, 150, 105, 0.08);
+    }
+
+    /* -------------------------------------------------------------
+       RESET & BASE STYLES
+       ------------------------------------------------------------- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 6rem 0;
+    }
+
+    .section-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-align: center;
+      letter-spacing: -0.025em;
+    }
+
+    .section-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 4rem auto;
+    }
+
+    /* Gradient Text Utility */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #ffffff !important;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--bg-tertiary);
+      border-color: var(--text-muted);
+      transform: translateY(-2px);
+    }
+
+    /* -------------------------------------------------------------
+       NAVBAR
+       ------------------------------------------------------------- */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background-color: rgba(9, 9, 11, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    }
+
+    [data-theme="light"] header {
+      background-color: rgba(248, 250, 252, 0.8);
+    }
+
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4.5rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+
+    .logo-icon {
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color var(--transition-speed) ease;
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text-primary);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width var(--transition-speed) ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Theme Toggle Switch */
+    .theme-toggle {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+      transition: all var(--transition-speed) ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text-primary);
+      background-color: var(--bg-tertiary);
+    }
+
+    .theme-toggle svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .theme-toggle .sun-icon { display: none; }
+    [data-theme="light"] .theme-toggle .moon-icon { display: none; }
+    [data-theme="light"] .theme-toggle .sun-icon { display: block; }
+
+    /* Mobile Menu Toggle */
+    .burger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 1.5rem;
+      height: 1rem;
+      cursor: pointer;
+    }
+
+    .burger span {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background-color: var(--text-primary);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* -------------------------------------------------------------
+       HERO SECTION
+       ------------------------------------------------------------- */
+    .hero {
+      position: relative;
+      padding-top: 10rem;
+      padding-bottom: 6rem;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 620px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 1rem;
+      background-color: var(--accent-light);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 9999px;
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.4; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.4; }
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-desc {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Visual Interactive Workspace Mockup */
+    .hero-visual {
+      position: relative;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      font-family: Consolas, Monaco, "Andale Mono", monospace;
+      font-size: 0.85rem;
+      overflow: hidden;
+    }
+
+    .window-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 0.375rem;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background-color: #ef4444; }
+    .dot-yellow { background-color: #eab308; }
+    .dot-green { background-color: #22c55e; }
+
+    .window-title {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .code-editor {
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .code-comment { color: var(--text-muted); }
+    .code-keyword { color: #f43f5e; }
+    .code-string { color: #10b981; }
+    .code-variable { color: #38bdf8; }
+    .code-function { color: #a855f7; }
+
+    /* Interactive floating widget inside visual */
+    .floating-stats {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Background graphics */
+    .glow-circle {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, var(--accent-light) 0%, rgba(99,102,241,0) 70%);
+      top: -100px;
+      right: -100px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* -------------------------------------------------------------
+       SERVICES SECTION
+       ------------------------------------------------------------- */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .service-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 2.5rem;
+      transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      background-color: var(--card-hover);
+    }
+
+    .service-icon {
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+    }
+
+    .service-icon svg {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .service-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .service-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* -------------------------------------------------------------
+       INTERACTIVE ESTIMATOR WIDGET (HOW TO ENGAGE)
+       ------------------------------------------------------------- */
+    .estimator-section {
+      background-color: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .estimator-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .estimator-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+    }
+
+    .estimator-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .estimator-select, .range-slider-wrap {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      padding: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .range-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .range-slider {
+      flex: 1;
+      height: 4px;
+      background-color: var(--border-color);
+      border-radius: 2px;
+      appearance: none;
+      outline: none;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .range-value {
+      font-weight: 700;
+      min-width: 2rem;
+      text-align: right;
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .feature-item input {
+      accent-color: var(--accent);
+    }
+
+    .estimator-results {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .result-heading {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-timeline {
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .result-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    /* -------------------------------------------------------------
+       PORTFOLIO & PROJECTS
+       ------------------------------------------------------------- */
+    .portfolio-filters {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+      transition: all var(--transition-speed) ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .project-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all var(--transition-speed) ease;
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+
+    /* Custom CSS Mockup Illustrations for Project Thumbnails */
+    .project-thumb {
+      height: 200px;
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .project-thumb-visual {
+      width: 80%;
+      height: 75%;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      box-shadow: var(--shadow);
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .thumb-nav {
+      height: 8px;
+      background-color: var(--border-color);
+      border-radius: 4px;
+      width: 40%;
+    }
+
+    .thumb-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 0.5rem;
+    }
+
+    .thumb-main {
+      background-color: var(--accent-light);
+      border-radius: 0.25rem;
+      border: 1px dashed var(--accent);
+      opacity: 0.6;
+    }
+
+    .thumb-side {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .thumb-side-line {
+      height: 6px;
+      background-color: var(--border-color);
+      border-radius: 3px;
+    }
+
+    .project-card:hover .project-thumb-visual {
+      transform: scale(1.03);
+      border-color: var(--accent);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .project-content {
+      padding: 1.5rem;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+
+    .project-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .project-link {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .project-link svg {
+      width: 1rem;
+      height: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .project-card:hover .project-link svg {
+      transform: translateX(3px);
+    }
+
+    /* Case Study Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2000;
+      background-color: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-content {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 2rem;
+      height: 2rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .modal-body {
+      padding: 2.5rem;
+    }
+
+    .modal-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      background-color: var(--accent-light);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 9999px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-stat-val {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .modal-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .modal-text {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-subtitle {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    /* -------------------------------------------------------------
+       OUR DEVELOPMENT PROCESS ("HOW IT WORKS")
+       ------------------------------------------------------------- */
+    .process-timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .process-timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 1.5rem;
+      width: 2px;
+      background-color: var(--border-color);
+    }
+
+    .process-step {
+      position: relative;
+      padding-left: 4rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .process-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .process-node {
+      position: absolute;
+      left: 0.75rem;
+      top: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background-color: var(--bg-primary);
+      border: 3px solid var(--accent);
+      transform: translateX(-25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .process-step:hover .process-node {
+      transform: translateX(-25%) scale(1.25);
+      background-color: var(--accent);
+      transition: all 0.2s ease;
+    }
+
+    .process-step-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .process-step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .process-step-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* -------------------------------------------------------------
+       DEVELOPER DASHBOARD & PUBLISHING TOOL
+       ------------------------------------------------------------- */
+    .dashboard-section {
+      background-color: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: flex-start;
+    }
+
+    .publish-intro {
+      max-width: 500px;
+    }
+
+    .publish-tabs-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .tab-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      background-color: rgba(0,0,0,0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: center;
+      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      background-color: var(--card-bg);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content {
+      padding: 2rem;
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .step-number-badge {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background-color: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 0.9rem;
+    }
+
+    .step-text strong {
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .step-text span {
+      color: var(--text-secondary);
+    }
+
+    /* Terminal/Command snippet in guide */
+    .cmd-box {
+      margin-top: 1rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      padding: 0.75rem;
+      font-family: Consolas, monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .copy-btn {
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+    }
+
+    .copy-btn:hover {
+      color: var(--accent);
+    }
+
+    /* Checklist Widget */
+    .checklist-wrap {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+    }
+
+    .checklist-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .checklist-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .check-item input {
+      accent-color: var(--accent);
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .check-item input:checked + span {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    /* -------------------------------------------------------------
+       TESTIMONIALS SLIDER
+       ------------------------------------------------------------- */
+    .testimonials-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .testimonial-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+
+    .testimonial-card.active {
+      display: block;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .testimonial-quote {
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .author-avatar {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background-color: var(--accent-light);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+
+    .author-info {
+      text-align: left;
+    }
+
+    .author-name {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .author-role {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .slider-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .slider-btn:hover {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .slider-dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .slider-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--border-color);
+      cursor: pointer;
+    }
+
+    .slider-dot.active {
+      background-color: var(--accent);
+      width: 20px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    /* -------------------------------------------------------------
+       CONTACT SECTION (WITH SIMULATED LIVE LEAD LEAD CONSOLE)
+       ------------------------------------------------------------- */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .contact-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .contact-card-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      background-color: var(--accent-light);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .contact-card-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .contact-form-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .input-field, .textarea-field {
+      width: 100%;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+    }
+
+    .input-field:focus, .textarea-field:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-light);
+    }
+
+    .textarea-field {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* Live Submission State */
+    .form-success-banner {
+      display: none;
+      background-color: var(--success-light);
+      border: 1px solid var(--success);
+      border-radius: 0.375rem;
+      padding: 1rem;
+      color: var(--success);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Simulated Developer lead board visual */
+    .console-panel {
+      margin-top: 1.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      background-color: #0c0c0e;
+      font-family: Consolas, monospace;
+      font-size: 0.75rem;
+      overflow: hidden;
+    }
+
+    .console-header {
+      background-color: #141416;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .console-body {
+      padding: 1rem;
+      color: #34d399;
+      min-height: 80px;
+      line-height: 1.4;
+    }
+
+    /* -------------------------------------------------------------
+       FOOTER
+       ------------------------------------------------------------- */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 0;
+      background-color: var(--bg-primary);
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-desc {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .social-link {
+      color: var(--text-secondary);
+      transition: color 0.2s ease;
+      display: flex;
+    }
+
+    .social-link:hover {
+      color: var(--accent);
+    }
+
+    .social-link svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* -------------------------------------------------------------
+       RESPONSIVE ADJUSTMENTS
+       ------------------------------------------------------------- */
+    @media (max-width: 991px) {
+      .hero-grid, .estimator-grid, .dash-grid, .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .hero-content {
+        max-width: 100%;
+        text-align: center;
+      }
+      .hero-buttons {
+        justify-content: center;
+      }
+      .hero-title {
+        font-size: 2.75rem;
+      }
+      .publish-intro {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header .container {
+        position: relative;
+      }
+      .burger {
+        display: flex;
+      }
+      .nav-links {
+        position: absolute;
+        top: 4.5rem;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-primary);
+        border-bottom: 1px solid var(--border-color);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.5rem;
+        display: none;
+        box-shadow: var(--shadow);
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+      .section-title {
+        font-size: 1.85rem;
+      }
+      .features-list {
+        grid-template-columns: 1fr;
+      }
+      .estimator-wrapper {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- -------------------------------------------------------------
+       NAVBAR / HEADER
+       ------------------------------------------------------------- -->
+  <header>
+    <div class="container">
+      <a href="#" class="logo">
+        <span class="logo-icon">
+          <!-- Overlapping brackets visual as custom SVG -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </span>
+        Apex<span class="gradient-text">Studio</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#estimator">Cost Calculator</a></li>
+          <li><a href="#portfolio">Our Work</a></li>
+          <li><a href="#process">How It Works</a></li>
+          <li><a href="#dashboard">Publishing Hub</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Light / Dark toggle -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <!-- Moon Icon (Dark Mode) -->
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <!-- Sun Icon (Light Mode) -->
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- CTA Button -->
+        <a href="#contact" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Get Started</a>
+
+        <!-- Mobile burger -->
+        <div class="burger" id="burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- -------------------------------------------------------------
+       HERO SECTION
+       ------------------------------------------------------------- -->
+  <section class="hero" id="home">
+    <div class="glow-circle"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            Accepting New Projects for 2026
+          </div>
+          <h1 class="hero-title">Designing & Coding High-Performance <span class="gradient-text">Websites</span></h1>
+          <p class="hero-desc">We build clean, ultra-fast, responsive web experiences tailored to your business needs. Fully customized from design to robust deployment.</p>
+          <div class="hero-buttons">
+            <a href="#portfolio" class="btn btn-primary">
+              View Our Work
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <a href="#estimator" class="btn btn-secondary">Cost Calculator</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="window-header">
+            <div class="window-dots">
+              <span class="window-dot dot-red"></span>
+              <span class="window-dot dot-yellow"></span>
+              <span class="window-dot dot-green"></span>
+            </div>
+            <div class="window-title">portfolio-config.json</div>
+            <div style="width: 42px;"></div>
+          </div>
+          <div class="code-editor">
+            <div><span class="code-comment">// Interactive Custom Config</span></div>
+            <div><span class="code-keyword">const</span> <span class="code-variable">developer</span> = {</div>
+            <div>&nbsp;&nbsp;name: <span class="code-string">"Apex Web Studio"</span>,</div>
+            <div>&nbsp;&nbsp;focus: <span class="code-string">"High performance & clean UI"</span>,</div>
+            <div>&nbsp;&nbsp;techStack: [</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"TypeScript"</span>, <span class="code-string">"React/Next.js"</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"Tailwind CSS"</span>, <span class="code-string">"Node.js"</span></div>
+            <div>&nbsp;&nbsp;],</div>
+            <div>&nbsp;&nbsp;readyForLaunch: <span class="code-keyword">true</span>,</div>
+            <div>&nbsp;&nbsp;deployToCDN: <span class="code-function">function</span>() {</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;return <span class="code-string">"⚡ Published in 1 click!"</span>;</div>
+            <div>&nbsp;&nbsp;}</div>
+            <div>};</div>
+          </div>
+          <div class="floating-stats">
+            <div>
+              <div class="stat-number">99+</div>
+              <div class="stat-label">Lighthouse Speed</div>
+            </div>
+            <div>
+              <div class="stat-number">40+</div>
+              <div class="stat-label">Sites Launched</div>
+            </div>
+            <div>
+              <div class="stat-number">100%</div>
+              <div class="stat-label">Happy Clients</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------
+       SERVICES SECTION
+       ------------------------------------------------------------- -->
+  <section id="services">
+    <div class="container">
+      <h2 class="section-title">Premium Web <span class="gradient-text">Services</span></h2>
+      <p class="section-subtitle">We don't use boring templates. We build specialized, tailored components optimized for maximum customer engagement.</p>
+      
+      <div class="services-grid">
+        <!-- Service Card 1 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <h3 class="service-title">Custom Web Apps</h3>
+          <p class="service-desc">Sophisticated single-page platforms tailored perfectly for operations, booking systems, or SaaS business models.</p>
+        </div>
+
+        <!-- Service Card 2 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+          </div>
+          <h3 class="service-title">High-Converting E-Commerce</h3>
+          <p class="service-desc">Fully optimized storefronts built with fluid cart checkouts, stripe integration, and clean item filters.</p>
+        </div>
+
+        <!-- Service Card 3 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="service-title">Performance & SEO Tuning</h3>
+          <p class="service-desc">Overhaul legacy sites to reach absolute 100% scores on page load, elevating organic traffic overnight.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------
+       INTERACTIVE ESTIMATOR WIDGET
+       ------------------------------------------------------------- -->
+  <section id="estimator" class="estimator-section">
+    <div class="container">
+      <h2 class="section-title">Configure Your <span class="gradient-text">Project Budget</span></h2>
+      <p class="section-subtitle">Tired of waiting days for agency proposals? Play with our interactive setup tool for instant timeline and budget transparency.</p>
+
+      <div class="estimator-wrapper">
+        <div class="estimator-grid">
+          <div class="estimator-form">
+            <!-- Project Type -->
+            <div class="form-group">
+              <label for="projectType">What are we building?</label>
+              <select id="projectType" class="estimator-select">
+                <option value="business" data-base="1200" data-time="1.5">Corporate Showcase Website</option>
+                <option value="ecommerce" data-base="2400" data-time="3">Advanced E-Commerce Store</option>
+                <option value="webapp" data-base="3200" data-time="4">Full-Stack SaaS Platform</option>
+              </select>
+            </div>
+
+            <!-- Page Count Slider -->
+            <div class="form-group">
+              <label for="pageCount">Estimated scope (Pages / Views):</label>
+              <div class="range-slider-wrap">
+                <input type="range" id="pageCount" class="range-slider" min="1" max="15" value="5">
+                <span class="range-value" id="pageCountVal">5</span>
+              </div>
+            </div>
+
+            <!-- Premium Add-ons -->
+            <div class="form-group">
+              <label>Additional Enhancements:</label>
+              <div class="features-list">
+                <label class="feature-item">
+                  <input type="checkbox" class="feature-addon" value="cms" data-cost="400" data-days="3">
+                  <span>Dynamic Headless CMS</span>
+                </label>
+                <label class="feature-item">
+                  <input type="checkbox" class="feature-addon" value="seo" data-cost="300" data-days="2">
+                  <span>Advanced Rank-1 SEO Pack</span>
+                </label>
+                <label class="feature-item">
+                  <input type="checkbox" class="feature-addon" value="anim" data-cost="250" data-days="2">
+                  <span>Framer-Motion Animations</span>
+                </label>
+                <label class="feature-item">
+                  <input type="checkbox" class="feature-addon" value="auth" data-cost="500" data-days="4">
+                  <span>Secure User Auth / Portal</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calculated Results Panel -->
+          <div class="estimator-results">
+            <div class="result-heading">Estimated Cost</div>
+            <div class="result-price" id="calcPrice">$1,450</div>
+            
+            <div class="result-heading" style="margin-top: 1rem;">Timeline Estimate</div>
+            <div class="result-timeline" id="calcTimeline">~2.5 Weeks</div>
+
+            <p class="result-desc">Includes responsive layout, dark/light optimization, accessibility standards, and direct publishing setup support.</p>
+            
+            <button class="btn btn-primary" style="width: 100%;" id="btnApplyQuote">Request This Setup</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------
+       PORTFOLIO & PROJECTS
+       ------------------------------------------------------------- -->
+  <section id="portfolio">
+    <div class="container">
+      <h2 class="section-title">Case Studies & <span class="gradient-text">Shipped Products</span></h2>
+      <p class="section-subtitle">Take a look at some of our production-ready builds. Built from scratch with ultimate speed and accessibility in mind.</p>
+
+      <div class="portfolio-filters">
+        <button class="filter-btn active" data-filter="all">All Platforms</button>
+        <button class="filter-btn" data-filter="webapp">Web Apps</button>
+        <button class="filter-btn" data-filter="ecommerce">E-Commerce</button>
+      </div>
+
+      <div class="portfolio-grid" id="portfolioGrid">
+        <!-- Project 1 -->
+        <div class="project-card" data-category="webapp" onclick="openModal('pulse')">
+          <div class="project-thumb">
+            <div class="project-thumb-visual">
+              <div class="thumb-nav"></div>
+              <div class="thumb-body">
+                <div class="thumb-main" style="background-color: rgba(99,102,241,0.25);"></div>
+                <div class="thumb-side">
+                  <div class="thumb-side-line" style="width: 100%;"></div>
+                  <div class="thumb-side-line" style="width: 80%;"></div>
+                  <div class="thumb-side-line" style="width: 60%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">Next.js</span>
+              <span class="project-tag">SaaS</span>
+            </div>
+            <h3 class="project-title">PulseCRM Dashboard</h3>
+            <p class="project-desc">Real-time analytical dashboard displaying customer pipelines, team communications, and conversion stats.</p>
+            <span class="project-link">
+              Read Case Study
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card" data-category="ecommerce" onclick="openModal('stride')">
+          <div class="project-thumb">
+            <div class="project-thumb-visual">
+              <div class="thumb-nav" style="width: 60%;"></div>
+              <div class="thumb-body" style="grid-template-columns: 1fr 1fr;">
+                <div class="thumb-main" style="background-color: rgba(16,185,129,0.25); border-color: #10b981;"></div>
+                <div class="thumb-main" style="background-color: rgba(16,185,129,0.25); border-color: #10b981;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">Stripe</span>
+              <span class="project-tag">E-com</span>
+            </div>
+            <h3 class="project-title">Stride Storefront</h3>
+            <p class="project-desc">Seamless physical footwear shopping platform utilizing custom serverless checkout endpoints.</p>
+            <span class="project-link">
+              Read Case Study
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card" data-category="webapp" onclick="openModal('zenith')">
+          <div class="project-thumb">
+            <div class="project-thumb-visual">
+              <div class="thumb-nav"></div>
+              <div class="thumb-body" style="grid-template-columns: 1fr;">
+                <div class="thumb-main" style="background-color: rgba(168,85,247,0.25); border-color: #a855f7;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">Headless</span>
+              <span class="project-tag">Sanity</span>
+            </div>
+            <h3 class="project-title">Zenith Property Hub</h3>
+            <p class="project-desc">A gorgeous real-estate visual directory with high-fidelity search mapping and fluid dynamic layouts.</p>
+            <span class="project-link">
+              Read Case Study
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDY MODAL OVERLAY -->
+  <div class="modal" id="projectModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamic content injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- -------------------------------------------------------------
+       OUR DEVELOPMENT PROCESS ("HOW IT WORKS")
+       ------------------------------------------------------------- -->
+  <section id="process">
+    <div class="container">
+      <h2 class="section-title">Our Bulletproof <span class="gradient-text">Workflow</span></h2>
+      <p class="section-subtitle">We don't leave you guessing. Here is the step-by-step path to turning your vision into a live production web service.</p>
+
+      <div class="process-timeline">
+        <!-- Step 1 -->
+        <div class="process-step">
+          <div class="process-node"></div>
+          <div class="process-step-num">Step 01</div>
+          <h3 class="process-step-title">Discovery & Blueprints</h3>
+          <p class="process-step-desc">We start with a thorough strategy call. We analyze your targets, define clean software architecture solutions, wireframe user flows, and compile complete specifications.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="process-step">
+          <div class="process-node"></div>
+          <div class="process-step-num">Step 02</div>
+          <h3 class="process-step-title">Sleek User Interface Design</h3>
+          <p class="process-step-desc">Our design philosophy is "usability first." We design interactive, responsive layouts with custom SVG iconography and perfectly coordinated light & dark contrast themes.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="process-step">
+          <div class="process-node"></div>
+          <div class="process-step-num">Step 03</div>
+          <h3 class="process-step-title">High-Velocity Coding</h3>
+          <p class="process-step-desc">We convert high-fidelity layouts into modular, semantic code with lightning speed. Every component is audited for fast bundle sizes, robust styling, and absolute search engine optimization.</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="process-step">
+          <div class="process-node"></div>
+          <div class="process-step-num">Step 04</div>
+          <h3 class="process-step-title">CDN Deployment & Launch</h3>
+          <p class="process-step-desc">We publish your final codebase to advanced global edge servers (like Vercel, Netlify, or AWS). Your site goes fully live with automatic SSL certificates and ultra-fast assets distribution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------
+       DEVELOPER DASHBOARD & PUBLISHING GUIDE HUB
+       ------------------------------------------------------------- -->
+  <section id="dashboard" class="dashboard-section">
+    <div class="container">
+      <div class="dash-grid">
+        <div class="publish-intro">
+          <div class="hero-badge" style="background-color: var(--accent-light);">Publishing Dashboard</div>
+          <h2 class="section-title" style="text-align: left; margin-bottom: 1.5rem;">How to Publish <span class="gradient-text">This Portfolio</span></h2>
+          <p class="hero-desc" style="margin-bottom: 1.5rem;">As a web developer, deploying your site should be effortless. We've built an interactive setup guide detailing the easiest ways to publish this portfolio online in under 3 minutes.</p>
+          
+          <div class="checklist-wrap">
+            <h3 class="checklist-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Deployment Readiness
+            </h3>
+            <div class="checklist-grid">
+              <label class="check-item">
+                <input type="checkbox" id="chkContent" checked>
+                <span>Customize content & bio details</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="chkCalc">
+                <span>Configure custom pricing ranges</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="chkGit">
+                <span>Push codebase to GitHub repository</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="chkDomain">
+                <span>Point your custom domain</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="publish-tabs-card">
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('vercel')">Vercel (Recommended)</button>
+            <button class="tab-btn" onclick="switchTab('netlify')">Netlify</button>
+            <button class="tab-btn" onclick="switchTab('github')">GitHub Pages</button>
+          </div>
+
+          <!-- Vercel Content -->
+          <div class="tab-content active" id="tab-vercel">
+            <div class="step-list">
+              <div class="step-item">
+                <span class="step-number-badge">1</span>
+                <div class="step-text">
+                  <strong>Create a Vercel Account</strong>
+                  <span>Head to vercel.com and sign up using your GitHub, GitLab, or Bitbucket account.</span>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-number-badge">2</span>
+                <div class="step-text">
+                  <strong>Install Vercel CLI (Optional)</strong>
+                  <span>You can publish instantly via terminal, or import directly from Git.</span>
+                  <div class="cmd-box">
+                    <span>npm i -g vercel && vercel</span>
+                    <button class="copy-btn" onclick="copyCmd('npm i -g vercel && vercel')">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-number-badge">3</span>
+                <div class="step-text">
+                  <strong>Import Git Repo & Launch</strong>
+                  <span>Click "Add New" > "Project" on your Vercel Dashboard, select this folder's GitHub repo, and press <strong>Deploy</strong>. Vercel sets up global CDN caching automatically!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Netlify Content -->
+          <div class="tab-content" id="tab-netlify">
+            <div class="step-list">
+              <div class="step-item">
+                <span class="step-number-badge">1</span>
+                <div class="step-text">
+                  <strong>Drag & Drop Deployment</strong>
+                  <span>The easiest static deployment: visit <strong>app.netlify.com</strong>, and simply drag-and-drop this portfolio project folder directly into the Netlify import box!</span>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-number-badge">2</span>
+                <div class="step-text">
+                  <strong>Continuous Git Integration</strong>
+                  <span>Alternatively, link your GitHub repository. Netlify re-builds and updates your live portfolio every single time you push code to main!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GitHub Pages Content -->
+          <div class="tab-content" id="tab-github">
+            <div class="step-list">
+              <div class="step-item">
+                <span class="step-number-badge">1</span>
+                <div class="step-text">
+                  <strong>Initialize Local Git Repo</strong>
+                  <span>Initialize git and push your static code folder directly to GitHub.</span>
+                  <div class="cmd-box">
+                    <span>git init && git add . && git commit -m "init"</span>
+                    <button class="copy-btn" onclick="copyCmd('git init && git add . && git commit -m \"init\"')">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-number-badge">2</span>
+                <div class="step-text">
+                  <strong>Enable Pages in Settings</strong>
+                  <span>Go to your GitHub repository > <strong>Settings</strong> > <strong>Pages</strong> tab. Under 'Build and deployment', set the Source to <strong>GitHub Actions</strong> or select the <strong>main branch</strong> folder and hit save. Your portfolio will go live on <code>yourusername.github.io</code>!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------
+       TESTIMONIALS SECTION
+       ------------------------------------------------------------- -->
+  <section id="testimonials">
+    <div class="container">
+      <h2 class="section-title">Client <span class="gradient-text">Feedback</span></h2>
+      <p class="section-subtitle">Read what other business founders say about our streamlined process, responsive layouts, and performance metrics.</p>
+
+      <div class="testimonials-wrap">
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card active" id="testimonial-0">
+          <p class="testimonial-quote">"Apex Web Studio delivered a completely custom SaaS product in record time. Their developer estimator tool helped us budget our features instantly, and their clean layout boosted conversions by 25%."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MS</div>
+            <div class="author-info">
+              <div class="author-name">Marcus Sterling</div>
+              <div class="author-role">Founder, PulseCRM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card" id="testimonial-1">
+          <p class="testimonial-quote">"The storefront built by Apex was exceptionally optimized. Our Google Lighthouse score jumped from 42 to 100 instantly, leading to an immediate rank up in search engine positions."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">HA</div>
+            <div class="author-info">
+              <div class="author-name">Helena Adams</div>
+              <div class="author-role">Growth Officer, Stride Shoes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Slider Controls -->
+        <div class="slider-controls">
+          <button class="slider-btn" id="prevSlide" aria-label="Previous testimonial">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <div class="slider-dots" id="sliderDots">
+            <span class="slider-dot active" onclick="setSlide(0)"></span>
+            <span class="slider-dot" onclick="setSlide(1)"></span>
+          </div>
+          <button class="slider-btn" id="nextSlide" aria-label="Next testimonial">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------
+       CONTACT SECTION
+       ------------------------------------------------------------- -->
+  <section id="contact">
+    <div class="container">
+      <h2 class="section-title">Initiate Your <span class="gradient-text">Project Launch</span></h2>
+      <p class="section-subtitle">Let's build something exceptional together. Use our quick contact form or review your calculated configuration setup.</p>
+
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Direct Channels</h3>
+          
+          <div class="contact-card">
+            <div class="contact-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-card-title">Email Correspondence</div>
+              <div class="contact-card-desc"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8ce4e9e0e0e3ccedfce9f4fbe9eefff8f9e8e5e3a2e8e9e1e3">[email&#160;protected]</a></div>
+            </div>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-card-title">Live Chat & Discovery</div>
+              <div class="contact-card-desc">Schedule a 15-minute zoom via Calendly.</div>
+            </div>
+          </div>
+
+          <!-- SIMULATED LIVE LEAD LEAD CONSOLE (AMAZING INTERACTIVITY) -->
+          <div class="console-panel">
+            <div class="console-header">
+              <span>Developer Lead Console</span>
+              <span style="color: #ef4444; font-weight: 700;">● Live</span>
+            </div>
+            <div class="console-body" id="consoleBody">
+              // Awaiting connection... Ready to log customer inquiries in real time.
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form-card">
+          <div class="form-success-banner" id="formSuccess">
+            <strong>✓ Transmission Received!</strong> Your developer inquiry has been simulated on our Lead Console below!
+          </div>
+
+          <form class="contact-form" id="contactForm" onsubmit="handleFormSubmit(event)">
+            <div class="input-row">
+              <div class="form-group">
+                <label for="usrName">Your Name</label>
+                <input type="text" id="usrName" class="input-field" placeholder="John Doe" required>
+              </div>
+              <div class="form-group">
+                <label for="usrEmail">Email Address</label>
+                <input type="email" id="usrEmail" class="input-field" placeholder="john@example.com" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="usrType">Interested Setup</label>
+              <select id="usrType" class="input-field">
+                <option value="business">Corporate Showcase Website</option>
+                <option value="ecommerce">Advanced E-Commerce Store</option>
+                <option value="webapp">Full-Stack SaaS Platform</option>
+                <option value="custom">Other Web Consultancies</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="usrMsg">Message Description</label>
+              <textarea id="usrMsg" class="textarea-field" placeholder="Tell us about your project requirements..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Transmit Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------
+       FOOTER
+       ------------------------------------------------------------- -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-left">
+        <div class="logo">
+          <span class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </span>
+          Apex<span class="gradient-text">Studio</span>
+        </div>
+        <div class="footer-desc">&copy; <span id="currentYear">2026</span> Apex Web Studio. Crafting clean code layouts.</div>
+      </div>
+
+      <div class="social-links">
+        <a href="#" class="social-link" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- -------------------------------------------------------------
+       JAVASCRIPT INTERACTIVITY
+       ------------------------------------------------------------- -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // 1. MOBILE RESPONSIVE NAV
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('navLinks');
+
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      // Burger animation
+      const spans = burger.querySelectorAll('span');
+      spans[0].style.transform = navLinks.classList.contains('active') ? 'rotate(45deg) translate(5px, 5px)' : 'none';
+      spans[1].style.opacity = navLinks.classList.contains('active') ? '0' : '1';
+      spans[2].style.transform = navLinks.classList.contains('active') ? 'rotate(-45deg) translate(5px, -5px)' : 'none';
+    });
+
+    // Close menu when link is clicked
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        const spans = burger.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+      });
+    });
+
+    // 2. LIGHT / DARK THEME SWITCHER
+    const themeToggle = document.getElementById('themeToggle');
+    const rootElement = document.documentElement;
+
+    // Check localStorage or default to system preference
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    rootElement.setAttribute('data-theme', savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = rootElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      rootElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+
+    // Set Dynamic Year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // 3. INTERACTIVE PROJECT ESTIMATOR CALCULATOR
+    const projectTypeSelect = document.getElementById('projectType');
+    const pageCountSlider = document.getElementById('pageCount');
+    const pageCountVal = document.getElementById('pageCountVal');
+    const featureAddons = document.querySelectorAll('.feature-addon');
+    
+    const calcPriceEl = document.getElementById('calcPrice');
+    const calcTimelineEl = document.getElementById('calcTimeline');
+
+    function calculateEstimate() {
+      const selectedOption = projectTypeSelect.options[projectTypeSelect.selectedIndex];
+      const baseCost = parseInt(selectedOption.getAttribute('data-base'));
+      const baseTime = parseFloat(selectedOption.getAttribute('data-time'));
+
+      const pages = parseInt(pageCountSlider.value);
+      pageCountVal.textContent = pages;
+
+      // Adjust cost and time per page (beyond page 1)
+      const pageCostFactor = 120; // $120 per extra page
+      const pageTimeFactor = 0.15; // 0.15 weeks per page
+      const extraPages = Math.max(0, pages - 1);
+
+      let totalCost = baseCost + (extraPages * pageCostFactor);
+      let totalTime = baseTime + (extraPages * pageTimeFactor);
+
+      // Add-ons calculations
+      featureAddons.forEach(addon => {
+        if (addon.checked) {
+          totalCost += parseInt(addon.getAttribute('data-cost'));
+          totalTime += parseFloat(addon.getAttribute('data-days')) / 5; // Convert working days to fraction of weeks
+        }
+      });
+
+      // Render formatting
+      calcPriceEl.textContent = `$${totalCost.toLocaleString()}`;
+      
+      const weeksFloat = Math.round(totalTime * 2) / 2; // Round to nearest 0.5 week
+      calcTimelineEl.textContent = `~${weeksFloat} ${weeksFloat === 1 ? 'Week' : 'Weeks'}`;
+    }
+
+    projectTypeSelect.addEventListener('change', calculateEstimate);
+    pageCountSlider.addEventListener('input', calculateEstimate);
+    featureAddons.forEach(addon => addon.addEventListener('change', calculateEstimate));
+
+    // Initialize calculator
+    calculateEstimate();
+
+    // 4. APPLY ESTIMATE TO CONTACT FORM
+    document.getElementById('btnApplyQuote').addEventListener('click', () => {
+      const selectedOption = projectTypeSelect.options[projectTypeSelect.selectedIndex].text;
+      const pages = pageCountSlider.value;
+      const price = calcPriceEl.textContent;
+      const timeline = calcTimelineEl.textContent;
+
+      // Collect active addons
+      let addonsList = [];
+      featureAddons.forEach(addon => {
+        if (addon.checked) {
+          addonsList.push(addon.parentElement.querySelector('span').textContent);
+        }
+      });
+
+      const addonText = addonsList.length > 0 ? `\nWith Add-ons: ${addonsList.join(', ')}` : '';
+
+      // Auto fill form fields
+      document.getElementById('usrType').value = projectTypeSelect.value;
+      document.getElementById('usrMsg').value = `Hi! I'm interested in the configured estimate:\n- Type: ${selectedOption}\n- Scope: ${pages} pages\n- Estimated Price: ${price}\n- Timeline: ${timeline}${addonText}\n\nLet's discuss my specific needs!`;
+      
+      // Smooth scroll to contact
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // 5. PORTFOLIO FILTERING
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filterValue = btn.getAttribute('data-filter');
+
+        projectCards.forEach(card => {
+          if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+            card.style.display = 'block';
+            card.style.animation = 'fadeIn 0.4s ease forwards';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // 6. PORTFOLIO CASE STUDY MODALS
+    const modal = document.getElementById('projectModal');
+    const modalBody = document.getElementById('modalBody');
+
+    // Case study dummy database
+    const caseStudies = {
+      pulse: {
+        tag: 'Next.js SaaS Dashboard',
+        title: 'PulseCRM System Optimization',
+        stats: [
+          { val: '2.4x Speedup', label: 'Load Time' },
+          { val: '+25%', label: 'Conversions' },
+          { val: '99', label: 'Lighthouse Score' }
+        ],
+        description: 'PulseCRM required a premium, responsive analytics dashboard that stayed perfectly snappy with massive dataset pipelines. We re-engineered their data tables with virtual rendering and integrated Next.js API caching to keep server roundtrips at a bare minimum.',
+        challenge: 'Slow initial load times of older client panels resulted in customer churn and poor review profiles on software listings.',
+        solution: 'Built with React 19, custom CSS variables, and server-side cache invalidation. All charting was drawn via lightweight, zero-dependency canvas renderings to secure fluid 60fps interaction profiles.'
+      },
+      stride: {
+        tag: 'E-Commerce Platform',
+        title: 'Stride Storefront Refresh',
+        stats: [
+          { val: '+40%', label: 'Mobile Sales' },
+          { val: '-50%', label: 'Cart Abandonment' },
+          { val: '0.8s', label: 'First Content Paint' }
+        ],
+        description: 'Stride required an elegant, minimal shoe marketplace. We engineered a ultra-light client bundle focusing heavily on instant route transitions and a pre-cached single-step Stripe checkout overlay.',
+        challenge: 'Multi-stage checkout pages were confusing customers and leading to higher basket abandonment on handheld browser formats.',
+        solution: 'We simplified checkout into a modular, self-contained single-page component using responsive grid layouts and robust pre-fetching mechanics to preload product assets dynamically.'
+      },
+      zenith: {
+        tag: 'Headless CMS Directory',
+        title: 'Zenith Property Hub Showcase',
+        stats: [
+          { val: '10k+', label: 'Organic Visits/Mo' },
+          { val: '<100ms', label: 'Filter Speeds' },
+          { val: '100%', label: 'Static Generated' }
+        ],
+        description: 'Zenith requested a high-performance real-estate portal built with Headless CMS bindings. We selected Sanity.io for content models, and constructed a static generated framework with instant client-side filtering.',
+        challenge: 'Slow query times when search parameters were changed resulted in poor customer exploratory engagement patterns.',
+        solution: 'Configured local index indices of listings and compiled beautiful client-side filters that execute instantly without hitting the database, paired with beautiful motion graphics on element lists.'
+      }
+    };
+
+    function openModal(id) {
+      const study = caseStudies[id];
+      if (!study) return;
+
+      let statsHTML = '';
+      study.stats.forEach(s => {
+        statsHTML += `
+          <div>
+            <div class="modal-stat-val">${s.val}</div>
+            <div class="modal-stat-label">${s.label}</div>
+          </div>
+        `;
+      });
+
+      modalBody.innerHTML = `
+        <span class="modal-tag">${study.tag}</span>
+        <h3 class="modal-title">${study.title}</h3>
+        <div class="modal-stats">${statsHTML}</div>
+        
+        <div class="modal-subtitle">The Project Scope</div>
+        <p class="modal-text">${study.description}</p>
+        
+        <div class="modal-subtitle">The Core Challenge</div>
+        <p class="modal-text">${study.challenge}</p>
+        
+        <div class="modal-subtitle">Our Architectural Solution</div>
+        <p class="modal-text" style="margin-bottom: 0;">${study.solution}</p>
+      `;
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Lock scrolling
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    // Close modal if clicking outside content card
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // 7. PUBLISHING HUB INTERACTIVE TABS
+    function switchTab(platform) {
+      // Deactivate all tab btns & content
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      // Find trigger button and set active
+      const eventBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(platform));
+      if (eventBtn) eventBtn.classList.add('active');
+
+      // Set content active
+      document.getElementById(`tab-${platform}`).classList.add('active');
+    }
+
+    function copyCmd(text) {
+      navigator.clipboard.writeText(text);
+      alert('Command copied to clipboard!');
+    }
+
+    // 8. TESTIMONIALS CAROUSEL
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.testimonial-card');
+    const dots = document.querySelectorAll('.slider-dot');
+
+    function setSlide(index) {
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+
+      currentSlide = (index + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    document.getElementById('prevSlide').addEventListener('click', () => setSlide(currentSlide - 1));
+    document.getElementById('nextSlide').addEventListener('click', () => setSlide(currentSlide + 1));
+
+    // 9. CONTACT FORM SIMULATION & DEVELOPER LEAD CONSOLE
+    const consoleBody = document.getElementById('consoleBody');
+    const formSuccess = document.getElementById('formSuccess');
+
+    // 💡 TO RECEIVE REAL EMAILS: Paste your Web3Forms Access Key here!
+    // Get a free key at https://web3forms.com/
+    const WEB3FORMS_ACCESS_KEY = "db992380-4863-4220-bdc6-67ce8749ad1e"; 
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('usrName').value;
+      const email = document.getElementById('usrEmail').value;
+      const type = document.getElementById('usrType').value;
+      const message = document.getElementById('usrMsg').value;
+
+      // Show animated success banner
+      formSuccess.style.display = 'block';
+      
+      // Update the real-time Developer Lead Console mock
+      consoleBody.innerHTML = `
+        <span style="color: #60a5fa;">[${new Date().toLocaleTimeString()}] INCOMING CONNECTION RECEIVED</span><br>
+        <span style="color: #a7f3d0;">$ lead_info = {</span><br>
+        &nbsp;&nbsp;name: <span style="color: #fb7185;">"${name}"</span>,<br>
+        &nbsp;&nbsp;email: <span style="color: #fb7185;">"${email}"</span>,<br>
+        &nbsp;&nbsp;projectFocus: <span style="color: #fb7185;">"${type.toUpperCase()}"</span>,<br>
+        &nbsp;&nbsp;messageBody: <span style="color: #fb7185;">"${message.substring(0, 45)}..."</span><br>
+        <span style="color: #a7f3d0;">};</span><br>
+        <span style="color: #34d399;">⚡ Status: Processing inquiry...</span>
+      `;
+
+      // If the API key is configured, perform a real background fetch post!
+      if (WEB3FORMS_ACCESS_KEY && WEB3FORMS_ACCESS_KEY !== "YOUR_API_KEY_HERE") {
+        const formData = new FormData();
+        formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("project_type", type);
+        formData.append("message", message);
+        formData.append("subject", `New Lead from Portfolio: ${name}`);
+
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            consoleBody.innerHTML += `<br><span style="color: #10b981;">✔ [API SUCCESS] Message securely dispatched to your inbox!</span>`;
+          } else {
+            consoleBody.innerHTML += `<br><span style="color: #ef4444;">❌ [API ERROR] Web3Forms returned an error: ${data.message}</span>`;
+          }
+        })
+        .catch(err => {
+          consoleBody.innerHTML += `<br><span style="color: #ef4444;">❌ [API ERROR] Network request failed.</span>`;
+        });
+      } else {
+        // Mock feedback
+        setTimeout(() => {
+          consoleBody.innerHTML += `<br><span style="color: #eab308;">ℹ [DEMO MODE] To receive actual emails, replace WEB3FORMS_ACCESS_KEY at the bottom of the index.html file with a real key!</span>`;
+        }, 1200);
+      }
+
+      // Reset Form fields
+      document.getElementById('contactForm').reset();
+
+      // Smooth scroll to success banner
+      formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2737c85be62ffda',t:'MTc4NjA3NjQwMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
